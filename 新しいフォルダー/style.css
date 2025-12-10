@@ -1,0 +1,253 @@
+:root{
+  --bg:#f7f8fb;
+  --card:#ffffff;
+  --accent:#2b6ef6;
+  --muted:#6b7280;
+  --glass: rgba(0,0,0,0.5);
+  --radius:12px;
+  --max-width:1100px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color-scheme: light;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:#111827;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-height:100vh;
+  padding:24px;
+}
+
+.site-header{
+  width:100%;
+  max-width:var(--max-width);
+  margin-bottom:20px;
+}
+
+.site-header h1{
+  margin:0 0 12px 0;
+  font-size:1.6rem;
+  letter-spacing:0.4px;
+}
+
+.search-form{
+  display:flex;
+  gap:12px;
+  align-items:end;
+  background:linear-gradient(180deg,#fff, #fbfdff);
+  padding:12px;
+  border-radius:10px;
+  box-shadow:0 1px 3px rgba(16,24,40,0.04), 0 8px 20px rgba(2,6,23,0.06);
+  flex-wrap:wrap;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  min-width:180px;
+  flex:1 1 200px;
+}
+
+.field label{
+  font-size:0.75rem;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+
+.field input{
+  padding:8px 10px;
+  border:1px solid #e6e9ef;
+  border-radius:8px;
+  font-size:0.95rem;
+  background:#fff;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+button{
+  padding:8px 12px;
+  border-radius:8px;
+  border:0;
+  background:var(--accent);
+  color:#fff;
+  cursor:pointer;
+  font-weight:600;
+}
+
+button.secondary{
+  background:#eef2ff;
+  color:var(--accent);
+  font-weight:600;
+  border:1px solid rgba(43,110,246,0.1);
+}
+
+button:active{transform:translateY(1px)}
+
+.main{
+  width:100%;
+  max-width:var(--max-width);
+  margin-top:8px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+
+/* Card */
+.card{
+  background:var(--card);
+  padding:14px;
+  border-radius:12px;
+  box-shadow:0 1px 2px rgba(16,24,40,0.04);
+  cursor:pointer;
+  transition:transform .12s ease, box-shadow .12s ease;
+  display:flex;
+  flex-direction:column;
+  min-height:120px;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 10px 20px rgba(16,24,40,0.08);
+}
+
+.card .title{
+  font-weight:700;
+  margin:0 0 8px 0;
+  font-size:1rem;
+}
+
+.card .game{
+  font-size:0.85rem;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+
+.card .summary{
+  flex:1;
+  color:#374151;
+  font-size:0.92rem;
+  margin-bottom:10px;
+}
+
+.card .tags{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.tag{
+  background:#f1f5f9;
+  color:#374151;
+  font-size:0.75rem;
+  padding:4px 8px;
+  border-radius:999px;
+}
+
+/* No results */
+.no-results{
+  text-align:center;
+  color:var(--muted);
+  margin-top:20px;
+}
+
+/* Modal / overlay */
+.overlay{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--glass);
+  padding:20px;
+  z-index:60;
+}
+
+.modal{
+  width:100%;
+  max-width:760px;
+  background:linear-gradient(180deg,#fff,#fbfdff);
+  border-radius:12px;
+  padding:20px 20px 24px 20px;
+  position:relative;
+  box-shadow:0 20px 40px rgba(2,6,23,0.4);
+  max-height:90vh;
+  overflow:auto;
+}
+
+.modal-close{
+  position:absolute;
+  top:10px;
+  right:12px;
+  background:transparent;
+  border:0;
+  font-size:1.6rem;
+  color:#374151;
+  cursor:pointer;
+  width:32px;
+  height:32px;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:10;
+  transition:color 0.2s ease;
+}
+
+.modal-close:hover{
+  color:#000;
+}
+
+.modal-close:active{
+  transform:scale(1.1);
+}
+
+.modal h2{
+  margin:6px 0 6px 0;
+  font-size:1.25rem;
+}
+
+.modal .meta{
+  color:var(--muted);
+  font-size:0.85rem;
+  margin-bottom:10px;
+}
+
+.modal-content{
+  color:#111827;
+  line-height:1.6;
+  margin-bottom:12px;
+}
+
+/* tags in modal */
+.modal-tags{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+/* Responsive */
+@media (max-width:1000px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+}
+
+@media (max-width:640px){
+  body{padding:16px}
+  .search-form{flex-direction:column; align-items:stretch}
+  .actions{justify-content:flex-end}
+  .grid{grid-template-columns:1fr}
+  .site-header h1{font-size:1.25rem}
+}

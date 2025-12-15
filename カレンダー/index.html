@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>シンプルカレンダー</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            color: #333;
+            flex: 1;
+            text-align: center;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #764ba2;
+        }
+        
+        button:active {
+            transform: scale(0.95);
+        }
+        
+        .calendar {
+            width: 100%;
+        }
+        
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .weekday {
+            text-align: center;
+            font-weight: bold;
+            color: #667eea;
+            padding: 10px 5px;
+            font-size: 14px;
+        }
+        
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        
+        .day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #333;
+            transition: all 0.3s;
+        }
+        
+        .day:hover {
+            background: #f0f0f0;
+        }
+        
+        .day.other-month {
+            color: #ccc;
+        }
+        
+        .day.today {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.4);
+        }
+        
+        .day.today:hover {
+            background: #764ba2;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #999;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            button {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            
+            .day {
+                font-size: 14px;
+            }
+            
+            .weekday {
+                font-size: 12px;
+                padding: 8px 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button id="prevBtn">← 前月</button>
+            <h1 id="monthYear"></h1>
+            <button id="nextBtn">次月 →</button>
+        </div>
+        
+        <div class="calendar">
+            <div class="weekdays">
+                <div class="weekday">月</div>
+                <div class="weekday">火</div>
+                <div class="weekday">水</div>
+                <div class="weekday">木</div>
+                <div class="weekday">金</div>
+                <div class="weekday">土</div>
+                <div class="weekday">日</div>
+            </div>
+            <div class="days" id="daysContainer"></div>
+        </div>
+        
+        <div class="footer">
+            <p>今日: <span id="todayDisplay"></span></p>
+        </div>
+    </div>
+
+    <script>
+        let currentDate = new Date();
+        
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            // ヘッダーを更新
+            document.getElementById('monthYear').textContent = 
+                `${year}年 ${month + 1}月`;
+            
+            // 今日の日付表示を更新
+            const today = new Date();
+            document.getElementById('todayDisplay').textContent = 
+                `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
+            
+            // 月の最初の日と最後の日を取得
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            
+            // 前月の最後の日を取得
+            const prevLastDay = new Date(year, month, 0).getDate();
+            
+            // カレンダーの最初の日（月曜日）の位置
+            const startDayOfWeek = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
+            
+            // 日付のHTMLを生成
+            let html = '';
+            
+            // 前月の日付
+            for (let i = prevLastDay - startDayOfWeek + 1; i <= prevLastDay; i++) {
+                html += `<div class="day other-month">${i}</div>`;
+            }
+            
+            // 当月の日付
+            for (let i = 1; i <= lastDay.getDate(); i++) {
+                const isToday = 
+                    today.getFullYear() === year &&
+                    today.getMonth() === month &&
+                    today.getDate() === i;
+                
+                const classList = isToday ? 'day today' : 'day';
+                html += `<div class="${classList}">${i}</div>`;
+            }
+            
+            // 次月の日付
+            const remainingDays = 42 - (startDayOfWeek + lastDay.getDate());
+            for (let i = 1; i <= remainingDays; i++) {
+                html += `<div class="day other-month">${i}</div>`;
+            }
+            
+            document.getElementById('daysContainer').innerHTML = html;
+        }
+        
+        // イベントリスナー設定
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        });
+        
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        });
+        
+        // 初期表示
+        renderCalendar();
+    </script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英単語学習アプリ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .english {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+        
+        .japanese {
+            font-size: 24px;
+            color: #764ba2;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hidden {
+            visibility: hidden;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-answer {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-answer:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .btn-next {
+            background: #764ba2;
+            color: white;
+        }
+        
+        .btn-next:hover {
+            background: #6a3f8b;
+            transform: translateY(-2px);
+        }
+        
+        .counter {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            
+            .card {
+                padding: 20px;
+                min-height: 150px;
+            }
+            
+            .english {
+                font-size: 24px;
+            }
+            
+            .japanese {
+                font-size: 18px;
+            }
+            
+            button {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>英単語学習</h1>
+        
+        <div class="card">
+            <div class="english" id="englishWord">apple</div>
+            <div class="japanese hidden" id="japaneseWord">りんご</div>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn-answer" id="answerBtn">答えを見る</button>
+            <button class="btn-next" id="nextBtn">次へ</button>
+        </div>
+        
+        <div class="counter">
+            <span id="currentIndex">1</span> / <span id="totalCount">10</span>
+        </div>
+    </div>
+
+    <script>
+        // 単語データ
+        const words = [
+            { english: 'apple', japanese: 'りんご' },
+            { english: 'book', japanese: '本' },
+            { english: 'cat', japanese: '猫' },
+            { english: 'dog', japanese: '犬' },
+            { english: 'elephant', japanese: '象' },
+            { english: 'flower', japanese: '花' },
+            { english: 'guitar', japanese: 'ギター' },
+            { english: 'house', japanese: '家' },
+            { english: 'ice', japanese: '氷' },
+            { english: 'jungle', japanese: 'ジャングル' }
+        ];
+
+        let currentWordIndex = 0;
+        let isAnswerShown = false;
+
+        const englishWordEl = document.getElementById('englishWord');
+        const japaneseWordEl = document.getElementById('japaneseWord');
+        const answerBtn = document.getElementById('answerBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const currentIndexEl = document.getElementById('currentIndex');
+        const totalCountEl = document.getElementById('totalCount');
+
+        // 初期化
+        function init() {
+            totalCountEl.textContent = words.length;
+            displayWord();
+        }
+
+        // 単語を表示
+        function displayWord() {
+            isAnswerShown = false;
+            const word = words[currentWordIndex];
+            englishWordEl.textContent = word.english;
+            japaneseWordEl.textContent = word.japanese;
+            japaneseWordEl.classList.add('hidden');
+            answerBtn.textContent = '答えを見る';
+            currentIndexEl.textContent = currentWordIndex + 1;
+        }
+
+        // ランダムに次の単語を表示
+        function nextWord() {
+            currentWordIndex = Math.floor(Math.random() * words.length);
+            displayWord();
+        }
+
+        // 答えの表示/非表示を切り替え
+        function toggleAnswer() {
+            isAnswerShown = !isAnswerShown;
+            if (isAnswerShown) {
+                japaneseWordEl.classList.remove('hidden');
+                answerBtn.textContent = '答えを隠す';
+            } else {
+                japaneseWordEl.classList.add('hidden');
+                answerBtn.textContent = '答えを見る';
+            }
+        }
+
+        // イベントリスナー
+        answerBtn.addEventListener('click', toggleAnswer);
+        nextBtn.addEventListener('click', nextWord);
+
+        // 初期表示
+        init();
+    </script>
+</body>
+</html>
